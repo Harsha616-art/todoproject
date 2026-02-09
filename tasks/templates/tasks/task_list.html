@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My To-Do List</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #e0f7fa; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 50px auto; padding: 20px; }
+        h1 { text-align: center; color: #00796b; margin-bottom: 20px; }
+        .task-card { background: #ffffff; padding: 15px; border-radius: 8px; margin-bottom: 12px; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; }
+        .task-card.completed { background-color: #d9fdd3; color: gray; text-decoration: line-through; }
+        .task-card .actions a { margin-left: 8px; padding: 5px 10px; border-radius: 5px; color: white; text-decoration: none; font-size: 14px; }
+        .task-card .actions a.toggle { background: #4CAF50; }
+        .task-card .actions a.delete { background: #f44336; }
+        .task-card .badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; background: #2196F3; color: white; margin-left: 8px; }
+
+        /* Priority border */
+        .task-card.priority-low { border-left: 5px solid #2196F3; }
+        .task-card.priority-medium { border-left: 5px solid #FFC107; }
+        .task-card.priority-high { border-left: 5px solid #F44336; }
+
+        .add-btn { display: block; text-align: center; margin: 20px 0; padding: 12px; background: #00796b; color: white; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        .add-btn:hover { background: #004d40; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <a href="{% url 'task_create' %}" class="add-btn">+ Add Task</a>
+
+        {% for task in tasks %}
+        <div class="task-card {% if task.completed %}completed{% endif %} priority-{{ task.priority }}">
+            <div>
+                <strong>{{ task.title }}</strong>
+                {% if task.description %}<p>{{ task.description }}</p>{% endif %}
+                {% if task.due_date %}
+                    <span class="badge">Due: {{ task.due_date }}</span>
+                {% endif %}
+            </div>
+            <div class="actions">
+                <a href="{% url 'task_toggle' task.id %}" class="toggle">Toggle</a>
+                <a href="{% url 'task_delete' task.id %}" class="delete">Delete</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No tasks yet!</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
